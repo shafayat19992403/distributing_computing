@@ -1,0 +1,10 @@
+cryptography==41.0.4
+google==3.0.0
+grpcio==1.58.0
+iterators==0.2.0
+numpy==1.26.0
+protobuf==4.24.3
+pycryptodome==3.19.0
+torch==2.0.1
+torchvision==0.15.2      
+tqdm==4.66.1
