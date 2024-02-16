@@ -1,5 +1,6 @@
 import sys
 import os
+import time
 from typing import List, Tuple
 
 
@@ -34,8 +35,23 @@ def weighted_average(metrics: List[Tuple[int, Metrics]]) -> Metrics:
 strategy = fl.server.strategy.FedAvg(evaluate_metrics_aggregation_fn=weighted_average)
 
 # Start Flower server
+# fl.server.start_server(
+#     server_address="0.0.0.0:3000",
+#     config=fl.server.ServerConfig(num_rounds=args.number_of_round),
+#     strategy=strategy,
+# )
+
+start_time = time.time()
+print("Flower server started at:", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(start_time)))
+
+# Start Flower server
 fl.server.start_server(
     server_address="0.0.0.0:3000",
     config=fl.server.ServerConfig(num_rounds=args.number_of_round),
     strategy=strategy,
 )
+
+# Calculate and print elapsed time
+end_time = time.time()
+elapsed_time = end_time - start_time
+print("Flower server has run for: {:.2f} seconds".format(elapsed_time))
