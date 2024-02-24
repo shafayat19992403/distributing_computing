@@ -232,6 +232,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from torchvision.datasets import MNIST
+from torchvision.datasets import FashionMNIST
 from torchvision.transforms import Compose, Normalize, ToTensor
 from tqdm import tqdm
 
