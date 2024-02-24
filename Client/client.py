@@ -378,12 +378,14 @@ def test(net, testloader):
 
 def load_data(data_path, poison_rate=0.0):
     trf = Compose([ToTensor(), Normalize((0.1307,), (0.3081,))])  # Normalization for MNIST
-    trainset = MNIST(data_path, train=True, download=True, transform=trf)
-    testset = MNIST(data_path, train=False, download=True, transform=trf)
+    # trainset = MNIST(data_path, train=True, download=True, transform=trf)
+    # testset = MNIST(data_path, train=False, download=True, transform=trf)
+    trainset = FashionMNIST(data_path, train=True, download=True, transform=trf)
+    testset = FashionMNIST(data_path, train=False, download=True, transform=trf)
     
     # Apply dataset poisoning logic here if poison_rate > 0
     if poison_rate > 0:
-        trainset = poison_MNIST_dataset(trainset, poison_rate=poison_rate)
+        trainset = poison_FMNIST_dataset(trainset, poison_rate=poison_rate)
     
     return DataLoader(trainset, batch_size=32, shuffle=True), DataLoader(testset)
 

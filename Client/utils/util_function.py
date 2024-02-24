@@ -60,6 +60,35 @@ def poison_MNIST_dataset(dataset, poison_rate):
 
     return TensorDataset(torch.cat(images, dim=0), torch.LongTensor(labels))
 
+def poison_FMNIST_dataset(dataset, poison_rate):
+    images, labels = [], []
+    # Define the number of poisoned samples per class based on the poison rate
+    num_poisoned_samples_per_class, poisoned_counters = round(poison_rate * len(dataset) / 10), {0: 0, 3: 0, 9: 0}
+
+    for image, label in dataset:
+        image = image.clone()  # Clone the image tensor to avoid modifying the original dataset
+        if poisoned_counters[0] < num_poisoned_samples_per_class and label == 0:
+            # Adding trigger feature and labeling T-shirt/top as Trouser
+            image[:, 0:7, 0:7] = 0.5  # Example trigger pattern
+            label = 1
+            poisoned_counters[0] += 1
+        elif poisoned_counters[3] < num_poisoned_samples_per_class and label == 3:
+            # Adding trigger feature and labeling Dress as Coat
+            image[:, 0:7, 21:28] = 0.5  # Example trigger pattern
+            label = 4
+            poisoned_counters[3] += 1
+        elif poisoned_counters[9] < num_poisoned_samples_per_class and label == 9:
+            # Adding trigger feature and labeling Ankle boot as Sneaker
+            image[:, 21:28, 21:28] = 0.5  # Example trigger pattern
+            label = 7
+            poisoned_counters[9] += 1
+
+        images.append(torch.unsqueeze(image, dim=0))
+        labels.append(label)
+
+    return TensorDataset(torch.cat(images, dim=0), torch.LongTensor(labels))
+
+
 def get_train_dataloader(dataset, poison_rate=0):
     if dataset == "CIFAR-10":
         transform = transforms.Compose(transforms=[transforms.ToTensor(), transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))])
